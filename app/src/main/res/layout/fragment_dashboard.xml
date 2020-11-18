@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.dashboard.DashboardFragment"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1500px"
+        tools:ignore="WebViewLayout">
+
+        <WebView android:id="@+id/Toweb"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/ivCamera"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@android:color/black"
+            android:padding="10dp"
+            android:src="@drawable/ic_photo_camera"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="242dp"
+            tools:layout_editor_absoluteY="54dp" />
+
+        <ImageView
+            android:id="@+id/ivPhoto"
+            android:layout_width="119dp"
+            android:layout_height="86dp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="27dp"
+            tools:layout_editor_absoluteY="62dp" />
+
+
+    </LinearLayout>
+<!--    <Button-->
+<!--        android:id="@+id/capture"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="拍照识别"-->
+<!--        tools:layout_editor_absoluteX="47dp"-->
+<!--        tools:layout_editor_absoluteY="252dp"-->
+<!--        tools:ignore="MissingConstraints" />-->
+
+
+
+
+
+</LinearLayout>
