@@ -34,9 +34,6 @@ import com.duanshl.aiapp.R;
 import com.duanshl.aiapp.Utils.PlantRecg;
 import com.duanshl.aiapp.data.model.RecgRes;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import org.json.JSONArray;
 
 import java.io.File;
 import java.io.IOException;
@@ -162,7 +159,7 @@ public class DashboardFragment extends Fragment {
                     RecgRes recgRes = gson.fromJson(res,RecgRes.class);
 //                    System.out.println("log_id ===== " + recgRes.getLog_id());
 
-                    JsonObject jsonObject = recgRes.getResult();
+//                    JsonObject jsonObject = recgRes.getResult();
 
                     //获取控件
                     Toweb = (WebView) getActivity().findViewById(R.id.Toweb);
