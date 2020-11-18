@@ -33,11 +33,16 @@ import androidx.lifecycle.ViewModelProvider;
 import com.duanshl.aiapp.R;
 import com.duanshl.aiapp.Utils.PlantRecg;
 import com.duanshl.aiapp.data.model.RecgRes;
-import com.google.gson.Gson;
+import com.duanshl.aiapp.data.model.Res;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -74,7 +79,7 @@ public class DashboardFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
                 new ViewModelProvider(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        View root = inflater.inflate(R.layout.testcon_layout, container, false);
 //        final TextView textView = root.findViewById(R.id.text_dashboard);
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -82,40 +87,23 @@ public class DashboardFragment extends Fragment {
                 //textView.setText(s);
             }
         });
-
-
-
-
-
-
         return root;
     }
 
-
-
     //////////////////////////////////////////////////
-
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setContentView(R.layout.fragment_dashboard);
-
+        getActivity().setContentView(R.layout.testcon_layout);
         ivCamera = getActivity().findViewById(R.id.ivCamera);
         ivPhoto = getActivity().findViewById(R.id.ivPhoto);
-
         ivCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkPermissionAndCamera();
             }
         });
-
-
-
-
     }
 
     /**
@@ -144,7 +132,6 @@ public class DashboardFragment extends Fragment {
                     // Android 10 使用图片uri加载
                     ivPhoto.setImageURI(mCameraUri);
 
-
                     /**
                      * 使用百度api进行植物识别
                      */
@@ -152,32 +139,39 @@ public class DashboardFragment extends Fragment {
                     System.out.println("Path ======= "+path);
                     String res = PlantRecg.plant(path);
 
-                    /**
-                     * 使用Google的Gson来解析json数据
-                     */
-                    Gson gson = new Gson();
-                    RecgRes recgRes = gson.fromJson(res,RecgRes.class);
-//                    System.out.println("log_id ===== " + recgRes.getLog_id());
-
-//                    JsonObject jsonObject = recgRes.getResult();
-
-                    //test
-
-
-
-                    //获取控件
-                    Toweb = (WebView) getActivity().findViewById(R.id.Toweb);
-                    //装载URL
-                    Toweb.loadUrl("http://www.baidu.com/");
-                    //获取焦点
-                    Toweb.requestFocus();
-                    Toweb.setWebViewClient(new WebViewClient(){
-                        @Override
-                        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                            view.loadUrl(url);
-                            return super.shouldOverrideUrlLoading(view, url);
+                    try {
+                        JSONObject res_json = new JSONObject(res);
+                        RecgRes recgRes = new RecgRes();
+                        recgRes.setLog_id(res_json.getString("log_id"));
+                        ArrayList<Res> resArrayList = new ArrayList<>();
+                        recgRes.setResult(resArrayList);
+                        JSONArray jsonArray = res_json.getJSONArray("result");
+                        for (int i = 0; i < jsonArray.length(); i++){
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            Res res1 = new Res(jsonObject.getString("score"),jsonObject.getString("name"));
+                            recgRes.getResult().add(res1);
                         }
-                    });
+//                        System.out.println("recgRes ==== " + recgRes);
+                        //得到可能性最高的种类的名称
+                        String res_name = recgRes.getResult().get(0).name;
+                        //组成URL,以百度百科形式展示到WebView里面
+                        String showUrl = "https://baike.baidu.com/item/" + res_name;
+                        //获取控件
+                        Toweb = (WebView) getActivity().findViewById(R.id.Toweb);
+                        //装载URL
+                        Toweb.loadUrl(showUrl);
+                        //获取焦点
+                        Toweb.requestFocus();
+                        Toweb.setWebViewClient(new WebViewClient(){
+                            @Override
+                            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                view.loadUrl(url);
+                                return super.shouldOverrideUrlLoading(view, url);
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 } else {
                     // 使用图片路径加载
