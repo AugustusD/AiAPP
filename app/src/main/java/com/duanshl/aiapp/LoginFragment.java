@@ -1,16 +1,20 @@
 package com.duanshl.aiapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.duanshl.aiapp.Utils.OkHttpUtil;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -34,6 +38,7 @@ public class LoginFragment extends Fragment {
     private String email;
     private String password;
 
+    private Button btn;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -61,32 +66,55 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            email = getArguments().getString(ARG_PARAM1);
-//            password = getArguments().getString(ARG_PARAM2);
-//        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onActivityCreated(savedInstanceState);
 
         LayoutInflater inflater = (LayoutInflater)getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         final View rootView = inflater.inflate(R.layout.fragment_login,null);
 
-        final EditText et_email = rootView.findViewById(R.id.log_email);
-        final EditText et_password = rootView.findViewById(R.id.log_password);
+        final TextView et_email = (TextView) getActivity().findViewById(R.id.log_email);
+        final TextView et_password = (TextView) getActivity().findViewById(R.id.log_password);
 
-        rootView.findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
+
+        btn.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View view) {
-                String loginUrl="http://localhost:8080/user/login";
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+//                System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+
+                String loginUrl="http://10.0.2.2:8080/user/login";
                 String loginAccount = et_email.getText().toString();
                 String loginPassword = et_password.getText().toString();
-                loginWithOkHttp(loginUrl,loginAccount,loginPassword);
+                try {
+                    loginWithOkHttp(loginUrl,loginAccount,loginPassword);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+
+        View rootView = inflater.inflate(R.layout.fragment_login,container,false);
+        btn = (Button) rootView.findViewById(R.id.btn_login);
+
+        return rootView;
+    }
+
     //实现登录
-    public void loginWithOkHttp(String address,String account,String password){
+    public void loginWithOkHttp(String address,String account,String password)throws JSONException{
         OkHttpUtil.loginWithOkHttp(address,account,password, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -96,13 +124,21 @@ public class LoginFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 //得到服务器返回的具体内容
                 final String responseData = response.body().string();
+
+                final TextView et_password = (TextView) getActivity().findViewById(R.id.log_password);
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (responseData.equals("true")){
                             Toast.makeText(getActivity(),"登录成功",Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
                         }else{
-                            Toast.makeText(getActivity(),"登录失败",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),"登录失败,请重试",Toast.LENGTH_SHORT).show();
+                            //密码栏清空，重新输入
+                            et_password.setText("");
                         }
                     }
                 });
@@ -112,15 +148,5 @@ public class LoginFragment extends Fragment {
 
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
-        View rootView = inflater.inflate(R.layout.fragment_login,container,false);
-
-
-
-        return rootView;
-    }
 }

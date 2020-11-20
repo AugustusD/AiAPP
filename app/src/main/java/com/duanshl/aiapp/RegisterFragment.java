@@ -1,16 +1,20 @@
 package com.duanshl.aiapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.duanshl.aiapp.Utils.OkHttpUtil;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -34,8 +38,7 @@ public class RegisterFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-
-
+    private Button btn;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -62,53 +65,50 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onActivityCreated(savedInstanceState);
 
         LayoutInflater inflater = (LayoutInflater)getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        final View rootView = inflater.inflate(R.layout.fragment_register,null);
+        final View rootView = inflater.inflate(R.layout.fragment_login,null);
 
-        final EditText et_name = rootView.findViewById(R.id.et_name);
-        final EditText et_email = rootView.findViewById(R.id.et_email);
-        final EditText et_password = rootView.findViewById(R.id.et_password);
+        final TextView et_name = getActivity().findViewById(R.id.et_name);
+        final TextView et_email = getActivity().findViewById(R.id.et_email);
+        final TextView et_password = getActivity().findViewById(R.id.et_password);
+        final TextView et_repassword = getActivity().findViewById(R.id.et_repassword);
 
-        rootView.findViewById(R.id.btn_register).setOnClickListener(new View.OnClickListener() {
+
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                String registerAddress="http://47.101.135.103/user/register";
-                String registerUserName = et_name.getText().toString();
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+//                System.out.println("注册注册注册注册注册注册注册注册注册注册");
+
+                String registerUrl="http://10.0.2.2:8080/user/register";
                 String registerEmail = et_email.getText().toString();
                 String registerPassword = et_password.getText().toString();
-                registerWithOkHttp(registerAddress,registerEmail,registerPassword,registerUserName);
-            }
-        });
-    }
-
-
-    //实现注册
-    public void registerWithOkHttp(String address,String account,String password,String userName){
-        OkHttpUtil.registerWithOkHttp(address, account, password,userName, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                //在这里对异常情况进行处理
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                final String responseData = response.body().string();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (responseData.equals("true")){
-                            Toast.makeText(getActivity(),"注册成功",Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(getActivity(),"注册失败",Toast.LENGTH_SHORT).show();
-                        }
+                String registerUserName = et_name.getText().toString();
+                String registerRePassword = et_repassword.getText().toString();
+                if (!registerPassword.equals(registerRePassword)){
+                    Toast.makeText(getActivity(),"两次输入密码不一致，请重新输入",Toast.LENGTH_SHORT).show();
+                    //清空密码和重复密码
+                    et_password.setText("");
+                    et_repassword.setText("");
+                    //焦点放在密码上
+                    et_password.requestFocus();
+                }else {
+                    try {
+                        registerWithOkHttp(registerUrl, registerEmail, registerPassword, registerUserName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
+
             }
         });
     }
@@ -117,6 +117,44 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_register,container,false);
+        btn = (Button) rootView.findViewById(R.id.btn_register);
+
+        return rootView;
     }
+
+    //实现注册
+    public void registerWithOkHttp(String address,String email,String password,String userName) throws JSONException {
+        OkHttpUtil.registerWithOkHttp(address, email, password,userName, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //在这里对异常情况进行处理
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String responseData = response.body().string();
+                final TextView et_email = (TextView) getActivity().findViewById(R.id.et_email);
+                final TextView et_name = (TextView) getActivity().findViewById(R.id.et_name);
+                final TextView et_password = (TextView) getActivity().findViewById(R.id.et_password);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (responseData.equals("true")){
+                            Toast.makeText(getActivity(),"注册成功",Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(),MainActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }else{
+                            Toast.makeText(getActivity(),"注册失败,邮箱已被注册",Toast.LENGTH_SHORT).show();
+                            //密码栏清空，重新输入
+                            et_password.setText("");
+                            et_email.setText("");
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
 }

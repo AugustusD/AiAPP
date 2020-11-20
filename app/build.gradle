@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.duanshl.aiapp"
-        minSdkVersion 29
+        minSdkVersion 27
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -36,6 +36,7 @@ dependencies {
 
     //noinspection GradleCompatible
     implementation "com.android.support:support-v4:18.0.+"
+    implementation 'org.conscrypt:conscrypt-android:2.2.1'
 
     implementation "com.squareup.okhttp3:okhttp:4.2.0"
     implementation 'com.google.code.gson:gson:2.8.6'
