@@ -89,7 +89,7 @@ public class LoginFragment extends Fragment {
                 // TODO Auto-generated method stub
 //                System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
 
-                String loginUrl="http://10.0.2.2:8080/user/login";
+                String loginUrl="http://47.101.135.103:8080/user/login";
                 String loginAccount = et_email.getText().toString();
                 String loginPassword = et_password.getText().toString();
                 try {

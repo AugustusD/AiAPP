@@ -89,7 +89,7 @@ public class RegisterFragment extends Fragment {
                 // TODO Auto-generated method stub
 //                System.out.println("注册注册注册注册注册注册注册注册注册注册");
 
-                String registerUrl="http://10.0.2.2:8080/user/register";
+                String registerUrl="http://47.101.135.103:8080/user/register";
                 String registerEmail = et_email.getText().toString();
                 String registerPassword = et_password.getText().toString();
                 String registerUserName = et_name.getText().toString();
