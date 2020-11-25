@@ -30,6 +30,7 @@ public class PlantRecg {
 
             // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
             String accessToken = AuthService.getAuth();
+//            String accessToken = "24.84ccc914d96fbadd869af86e0a59fbee.2592000.1608729440.282335-22944169";
 
 //            Instant inst7 = Instant.now();
             String result = HttpUtil.post(url, accessToken, param);

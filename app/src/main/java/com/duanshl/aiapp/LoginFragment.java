@@ -87,13 +87,17 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-//                System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
 
                 String loginUrl="http://47.101.135.103:8080/user/login";
                 String loginAccount = et_email.getText().toString();
                 String loginPassword = et_password.getText().toString();
                 try {
+                    System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+
                     loginWithOkHttp(loginUrl,loginAccount,loginPassword);
+                    System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -116,8 +120,12 @@ public class LoginFragment extends Fragment {
     //实现登录
     public void loginWithOkHttp(String address,String account,String password)throws JSONException{
         OkHttpUtil.loginWithOkHttp(address,account,password, new Callback() {
+
+
+
             @Override
             public void onFailure(Call call, IOException e) {
+                System.out.println("出异常啦出异常啦出异常啦出异常啦");
                 //在这里对异常情况进行处理
             }
             @Override
@@ -130,6 +138,7 @@ public class LoginFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        System.out.println("登录马上成功！");
                         if (responseData.equals("true")){
                             Toast.makeText(getActivity(),"登录成功",Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getActivity(), MainActivity.class);

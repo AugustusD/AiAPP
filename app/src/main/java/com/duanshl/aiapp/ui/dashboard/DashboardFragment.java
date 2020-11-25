@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,11 +77,17 @@ public class DashboardFragment extends Fragment {
     private DashboardViewModel dashboardViewModel;
     private WebView Toweb;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    public View onCreateView(@NonNull final LayoutInflater inflater,
+                             final ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
                 new ViewModelProvider(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.testcon_layout, container, false);
+        final View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         final TextView textView = root.findViewById(R.id.text_dashboard);
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -89,23 +96,33 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+        // Android 4.0 之后不能在主线程中请求HTTP请求
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                ivCamera = root.findViewById(R.id.ivCamera);
+                ivPhoto = root.findViewById(R.id.ivPhoto);
+                ivCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        checkPermissionAndCamera();
+                    }
+                });
+            }
+        }).start();
+
         return root;
     }
 
-    //////////////////////////////////////////////////
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getActivity().setContentView(R.layout.testcon_layout);
-        ivCamera = getActivity().findViewById(R.id.ivCamera);
-        ivPhoto = getActivity().findViewById(R.id.ivPhoto);
-        ivCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkPermissionAndCamera();
-            }
-        });
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
     }
 
     /**

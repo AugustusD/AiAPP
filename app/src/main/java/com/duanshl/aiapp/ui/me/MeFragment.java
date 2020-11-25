@@ -1,9 +1,11 @@
 package com.duanshl.aiapp.ui.me;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,13 +13,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
+import com.duanshl.aiapp.MapActivity;
 import com.duanshl.aiapp.R;
 
 public class MeFragment extends Fragment {
 
     private MeViewModel meViewModel;
+    Button button;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,6 +34,22 @@ public class MeFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+
+        button = root.findViewById(R.id.btn_activity);
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent intent = new Intent(getActivity(), MapActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+
+
         return root;
     }
 }
