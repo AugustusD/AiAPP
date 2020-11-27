@@ -2,5 +2,8 @@
 <resources>
     <color name="colorPrimary">#00796b</color>
     <color name="colorPrimaryDark">#00695C</color>
+    <color name="dkgray">#FF444444</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="weatherInfo">#BD444444</color>
+    <color name="white">#FFF</color>
 </resources>

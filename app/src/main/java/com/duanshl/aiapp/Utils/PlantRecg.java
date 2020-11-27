@@ -5,7 +5,14 @@ import java.net.URLEncoder;
 public class PlantRecg {
     public static String plant(String imageUri) {
         // 请求url
-        String url = "https://aip.baidubce.com/rest/2.0/image-classify/v1/plant";
+        String animal_url = "https://aip.baidubce.com/rest/2.0/image-classify/v1/animal";
+        String plant_url = "https://aip.baidubce.com/rest/2.0/image-classify/v1/plant";
+        String logo_url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/logo";
+        String ingredient_url = "https://aip.baidubce.com/rest/2.0/image-classify/v1/classify/ingredient";
+        String dish_url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/dish";
+        String redWine_url = "https://aip.baidubce.com/rest/2.0/image-classify/v1/redwine";
+        String currency_url = "https://aip.baidubce.com/rest/2.0/image-classify/v1/currency";
+        String landmark_url = "https://aip.baidubce.com/rest/2.0/image-classify/v1/landmark";
         try {
             // 本地文件路径
             String filePath = imageUri;
@@ -33,7 +40,7 @@ public class PlantRecg {
 //            String accessToken = "24.84ccc914d96fbadd869af86e0a59fbee.2592000.1608729440.282335-22944169";
 
 //            Instant inst7 = Instant.now();
-            String result = HttpUtil.post(url, accessToken, param);
+            String result = HttpUtil.post(plant_url, accessToken, param);
 //            Instant inst8 = Instant.now();
 
 //            System.out.println("请求所需的时间(毫秒)：" + Duration.between(inst7, inst8).toMillis());

@@ -1,4 +1,4 @@
-package com.duanshl.aiapp;
+package com.duanshl.aiapp.ui.LR;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.duanshl.aiapp.MainActivity;
+import com.duanshl.aiapp.R;
 import com.duanshl.aiapp.Utils.OkHttpUtil;
 
 import org.json.JSONException;

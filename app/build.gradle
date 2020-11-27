@@ -41,6 +41,13 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'androidx.preference:preference-ktx:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.0'
+//    //一个Android富文本类库，支持图文混排，支持编辑和预览，支持插入和删除图片。
+//    implementation 'com.github.sendtion:XRichText:1.9.4'
+    //WMRichTextEditor是一款Android端文本编辑器，目前支持16种编排格式，适用于Android项目的笔记板块的开发。
+    implementation 'com.github.widemouth-dz:wmrichtexteditor:2.0.4'
 
     //noinspection GradleCompatible
     implementation "com.android.support:support-v4:18.0.+"

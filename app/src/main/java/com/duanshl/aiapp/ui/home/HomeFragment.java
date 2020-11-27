@@ -10,45 +10,42 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.Overlay;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.baidu.platform.comapi.map.MapController;
 import com.duanshl.aiapp.R;
 
 
-public class HomeFragment extends Fragment implements OnGetGeoCoderResultListener {
+public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private MapView mMapView = null;
+    private LocationClient mLocClient;
+    private MapView mMapView;
     private BaiduMap mBaiduMap;
-    private LocationClient mLocationClient;
-    private MyLocationConfiguration.LocationMode mLocationMode;
-    private MapController mMapController = null;
-    private FragmentManager mFragmentManager;
-
-
-    // 定位相关
-    LocationClient mLocClient;
-    public MyLocationListener myListener = new MyLocationListener();
-    Overlay overlay = null;
-    MyLocationData myLocationData = null;
-    GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
-
+    private BitmapDescriptor bitmap;
+    private String address= "";
+    // 是否首次定位
+    boolean isFirstLoc = true;
 
 //    static MapFragment newInstance() {
 //        MapFragment f = new MapFragment();
@@ -73,49 +70,20 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 
             }
         });
-
-        //百度地图 定位SDK的调用必须在主线程中
+        // 地图初始化
         mMapView = (MapView) root.findViewById(R.id.bmapView);
+        //设置是否显示比例尺控件
+        mMapView.showScaleControl(false);
+        // 删除百度地图LoGo
+        mMapView.removeViewAt(1);
         mBaiduMap = mMapView.getMap();
-        // 初始化搜索模块，注册事件监听
-        mSearch = GeoCoder.newInstance();
-        mSearch.setOnGetGeoCodeResultListener(this);
-//        //普通地图 ,mBaiduMap是地图控制器对象
-//        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-
-        //开启地图的定位图层
-        mBaiduMap.setMyLocationEnabled(true);
-
-        //定位初始化
-        mLocationClient = new LocationClient(getActivity().getApplicationContext());
-        //通过LocationClientOption设置LocationClient相关参数
-        LocationClientOption option = new LocationClientOption();
-        option.setOpenGps(true); // 打开gps
-        option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(1000);
-        //设置locationClientOption
-        mLocationClient.setLocOption(option);
-//        System.out.println("option == " + option);
-        //注册LocationListener监听器
-        MyLocationListener myLocationListener = new MyLocationListener();
-//        System.out.println("myLocationListener == " + myLocationListener);
-        mLocationClient.registerLocationListener(myLocationListener);
-        //开启地图定位图层
-        mLocationClient.start();
-
-
-//        // Android 4.0 之后不能在主线程中请求HTTP请求
-//        new Thread(new Runnable(){
-//            @Override
-//            public void run() {
-//
-//            }
-//        }).start();
-
+//        final MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
+        // 定位初始化
+        initLocation();
+        // 点击地图获取位置
+        startMark();
         return root;
     }
-
-
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
@@ -128,66 +96,148 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
         }
     }
 
+    /**
+     * 定位初始化
+     */
+    public void initLocation(){
+        // 开启定位图层
+        mBaiduMap.setMyLocationEnabled(true);
+        // 定位初始化
+        mLocClient = new LocationClient(getActivity());
+        HomeFragment.MyLocationListenner myListener = new HomeFragment.MyLocationListenner();
+        mLocClient.registerLocationListener(myListener);
+
+        LocationClientOption option = new LocationClientOption();
+        // 打开gps
+        option.setOpenGps(true);
+        // 设置坐标类型
+        option.setCoorType("bd09ll");
+        option.setScanSpan(1000);
+        mLocClient.setLocOption(option);
+        mLocClient.start();
+    }
 
     /**
-     * 构造地图数据
-     * 我们通过继承抽象类BDAbstractListener并重写其onReceieveLocation方法来获取定位数据，并将其传给MapView。
+     * 点击地图获取经纬度信息
      */
-    public class MyLocationListener extends BDAbstractLocationListener {
+    public void startMark(){
+        // 设置marker图标
+        bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_redmarker);
+        mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
+
+            @Override
+            public void onMapPoiClick(MapPoi arg0) {
+                // TODO Auto-generated method stub
+            }
+
+            //此方法就是点击地图监听
+            @Override
+            public void onMapClick(LatLng latLng) {
+                //获取经纬度
+                double latitude = latLng.latitude;
+                double longitude = latLng.longitude;
+                System.out.println("latitude=" + latitude + ",longitude=" + longitude);
+                //先清除图层
+                mBaiduMap.clear();
+                // 定义Maker坐标点
+                LatLng point = new LatLng(latitude, longitude);
+                // 构建MarkerOption，用于在地图上添加Marker
+                MarkerOptions options = new MarkerOptions().position(point)
+                        .icon(bitmap);
+                // 在地图上添加Marker，并显示
+                mBaiduMap.addOverlay(options);
+                //实例化一个地理编码查询对象
+                GeoCoder geoCoder = GeoCoder.newInstance();
+//                //设置反地理编码位置坐标
+//                ReverseGeoCodeOption op = new ReverseGeoCodeOption()
+//                        .location(latLng);
+//                op.location(latLng);
+                //发起反地理编码请求(经纬度->地址信息)
+//                geoCoder.reverseGeoCode(op);
+                geoCoder.reverseGeoCode(new ReverseGeoCodeOption()
+                        .location(latLng)
+                        // 设置是否返回新数据 默认值0不返回，1返回
+                        .newVersion(1)
+                        // POI召回半径，允许设置区间为0-1000米，超过1000米按1000米召回。默认值为1000
+                        .radius(500));
+
+                geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+                    @Override
+                    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+                        if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                            //没有找到检索结果
+                            System.out.println("没有找到检索结果");
+                            return;
+                        } else {
+                            //详细地址
+                            String address = reverseGeoCodeResult.getAddress();
+                            //行政区号
+                            int adCode = reverseGeoCodeResult. getCityCode();
+                        }
+                        System.out.println("详细地址==========="+address);
+                    }
+                    @Override
+                    public void onGetGeoCodeResult(GeoCodeResult arg0) {
+                    }
+                });
+
+                geoCoder.destroy();
+            }
+        });
+    }
+
+    /**
+     * 定位SDK监听函数
+     */
+    public class MyLocationListenner implements BDLocationListener {
+
         @Override
         public void onReceiveLocation(BDLocation location) {
-            //mapView 销毁后不在处理新接收的位置
-            if (location == null || mMapView == null){
+            // MapView 销毁后不在处理新接收的位置
+            if (location == null || mMapView == null) {
                 return;
             }
             MyLocationData locData = new MyLocationData.Builder()
-                    .accuracy(location.getRadius())
-                    // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .direction(location.getDirection()).latitude(location.getLatitude())
-                    .longitude(location.getLongitude()).build();
-            System.out.println("locData ================= " + locData);
+                    .accuracy(location.getRadius())// 设置定位数据的精度信息，单位：米
+                    .direction(location.getDirection()) // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .latitude(location.getLatitude())
+                    .longitude(location.getLongitude())
+                    .build();
+            // 设置定位数据, 只有先允许定位图层后设置数据才会生效
             mBaiduMap.setMyLocationData(locData);
+            if (isFirstLoc) {
+                isFirstLoc = false;
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                MapStatus.Builder builder = new MapStatus.Builder();
+                builder.target(latLng).zoom(20.0f);
+                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+            }
         }
     }
 
     @Override
-    public void onGetGeoCodeResult(GeoCodeResult result) {
-
-    }
-
-    @Override
-    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
-
-    }
-
-    @Override
     public void onResume() {
-        mMapView.onResume();
         super.onResume();
+        // 在activity执行onResume时必须调用mMapView. onResume ()
+        mMapView.onResume();
     }
 
     @Override
     public void onPause() {
-        mMapView.onPause();
         super.onPause();
-    }
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mMapView.onSaveInstanceState(outState);
+        // 在activity执行onPause时必须调用mMapView. onPause ()
+        mMapView.onPause();
     }
 
     @Override
     public void onDestroy() {
-        mLocationClient.stop();
-        mBaiduMap.setMyLocationEnabled(false);
-        mMapView.onDestroy();
-        mMapView = null;
         super.onDestroy();
+        // 退出时销毁定位
+        mLocClient.stop();
+        // 关闭定位图层
+        mBaiduMap.setMyLocationEnabled(false);
+        // 在activity执行onDestroy时必须调用mMapView.onDestroy()
+        mMapView.onDestroy();
     }
 }
 

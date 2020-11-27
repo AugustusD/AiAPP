@@ -28,7 +28,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".ui.article.WriteArticleActivity"
+            android:hardwareAccelerated="false"></activity>
+        <activity android:name=".ui.article.BrowseArticleHistory" />
+        <activity
+            android:name=".ui.me.AboutInfoActivity"
+            android:label="@string/title_activity_about_info"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name="com.baidu.location.f"
@@ -39,7 +45,7 @@
             android:value="8jpNRIQH25ofN9W3t0A0kyGkGT7UaFys" />
 
         <activity
-            android:name=".LRActivity"
+            android:name=".ui.LR.LRActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

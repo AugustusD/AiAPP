@@ -1,4 +1,4 @@
-package com.duanshl.aiapp;
+package com.duanshl.aiapp.ui.LR;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.duanshl.aiapp.MainActivity;
+import com.duanshl.aiapp.R;
 import com.duanshl.aiapp.Utils.OkHttpUtil;
 
 import org.json.JSONException;
@@ -141,7 +143,7 @@ public class RegisterFragment extends Fragment {
                     public void run() {
                         if (responseData.equals("true")){
                             Toast.makeText(getActivity(),"注册成功",Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(),MainActivity.class);
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
                             startActivity(intent);
                             getActivity().finish();
                         }else{

@@ -14,15 +14,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.duanshl.aiapp.MapActivity;
 import com.duanshl.aiapp.R;
+import com.duanshl.aiapp.ui.article.WriteArticleActivity;
 
 public class MeFragment extends Fragment {
 
     private MeViewModel meViewModel;
     Button button;
+    Button button1;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
+    public View onCreateView(@NonNull final LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         meViewModel =
                 new ViewModelProvider(this).get(MeViewModel.class);
@@ -35,20 +36,24 @@ public class MeFragment extends Fragment {
             }
         });
 
-
-        button = root.findViewById(R.id.btn_activity);
+        button = (Button) root.findViewById(R.id.btn_activity);
         button.setOnClickListener(new View.OnClickListener() {
-
             @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Intent intent = new Intent(getActivity(), MapActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),AboutInfoActivity.class);
                 startActivity(intent);
-
             }
         });
 
 
+        button1 = (Button) root.findViewById(R.id.myMap_Acti);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), WriteArticleActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return root;
     }
