@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/AiApp.iml" filepath="$PROJECT_DIR$/.idea/modules/AiApp.iml" group="AiApp" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RichEditTextLib/RichEditTextLib.iml" filepath="$PROJECT_DIR$/.idea/modules/RichEditTextLib/RichEditTextLib.iml" group="AiApp/RichEditTextLib" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="AiApp/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imagepicker/imagepicker.iml" filepath="$PROJECT_DIR$/.idea/modules/imagepicker/imagepicker.iml" group="AiApp/imagepicker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ucrop/ucrop.iml" filepath="$PROJECT_DIR$/.idea/modules/ucrop/ucrop.iml" group="AiApp/ucrop" />
     </modules>
   </component>
 </project>

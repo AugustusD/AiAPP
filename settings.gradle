@@ -1,2 +1,5 @@
+include ':RichEditTextLib'
+include ':imagepicker'
+include ':ucrop'
 include ':app'
 rootProject.name = "AiApp"

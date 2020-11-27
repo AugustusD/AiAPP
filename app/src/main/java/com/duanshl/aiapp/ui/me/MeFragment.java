@@ -15,7 +15,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.duanshl.aiapp.R;
-import com.duanshl.aiapp.ui.article.WriteArticleActivity;
+import com.leo.copytoutiao.activity.PublishActivity;
 
 public class MeFragment extends Fragment {
 
@@ -50,7 +50,9 @@ public class MeFragment extends Fragment {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), WriteArticleActivity.class);
+
+                //用的是RichEditTextLib这个module里的
+                Intent intent = new Intent(getActivity(), PublishActivity.class);
                 startActivity(intent);
             }
         });
