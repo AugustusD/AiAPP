@@ -2,6 +2,7 @@ package com.duanshl.aiapp.ui.LR;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,17 +25,12 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LoginFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import static android.content.Context.MODE_PRIVATE;
+
 public class LoginFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
+    static Boolean loginSuccess = false;
 
     // TODO: Rename and change types of parameters
     private String email;
@@ -59,8 +55,8 @@ public class LoginFragment extends Fragment {
         LoginFragment fragment = new LoginFragment();
         //Bundle用于activity之间传递数据
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, email);
-        args.putString(ARG_PARAM2, password);
+        args.putString("email", email);
+        args.putString("password", password);
         fragment.setArguments(args);
         return fragment;
     }
@@ -96,8 +92,14 @@ public class LoginFragment extends Fragment {
                 try {
                     System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
 
+
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("art", MODE_PRIVATE);
+                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    edit.putString("email", loginAccount);
+                    edit.commit();
+
                     loginWithOkHttp(loginUrl,loginAccount,loginPassword);
-                    System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+
 
 
                 } catch (JSONException e) {
@@ -143,11 +145,16 @@ public class LoginFragment extends Fragment {
                         System.out.println("登录马上成功！");
                         if (responseData.equals("true")){
                             Toast.makeText(getActivity(),"登录成功",Toast.LENGTH_SHORT).show();
+
                             Intent intent = new Intent(getActivity(), MainActivity.class);
                             startActivity(intent);
+                            //利用广播在activity之间传值
+
+                            loginSuccess = true;
+
                             getActivity().finish();
                         }else{
-                            Toast.makeText(getActivity(),"登录失败,请重试",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),"登录失败,请检查账号密码是否正确",Toast.LENGTH_SHORT).show();
                             //密码栏清空，重新输入
                             et_password.setText("");
                         }
@@ -155,9 +162,7 @@ public class LoginFragment extends Fragment {
                 });
             }
         });
+
     }
-
-
-
 
 }

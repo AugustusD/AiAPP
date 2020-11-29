@@ -159,6 +159,7 @@ public class DashboardFragment extends Fragment {
                     String res = PlantRecg.plant(path);
 
                     try {
+//                        assert res != null;
                         JSONObject res_json = new JSONObject(res);
                         RecgRes recgRes = new RecgRes();
                         recgRes.setLog_id(res_json.getString("log_id"));

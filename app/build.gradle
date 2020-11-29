@@ -53,10 +53,13 @@ dependencies {
     implementation project(path: ':imagepicker')
     implementation project(path: ':ucrop')
 
-    implementation 'com.android.databinding:compiler:3.1.4'
+    annotationProcessor 'com.android.databinding:compiler:3.1.4'
 
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
+
+    // https://mvnrepository.com/artifact/com.google.android.material/material
+    implementation 'com.google.android.material:material:1.2.1'
 
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.0'
 //    //一个Android富文本类库，支持图文混排，支持编辑和预览，支持插入和删除图片。
@@ -76,7 +79,7 @@ dependencies {
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation files('libs/BaiduLBS_Android.jar')
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
