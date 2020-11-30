@@ -49,4 +49,15 @@ public class OkHttpUtil {
                 .build();
         client.newCall(request).enqueue(callback);
     }
+
+    //下载数据
+    public static void downloadArticles(okhttp3.Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        String getArticles_url = "http://47.101.135.103:8080/article/articles";
+        Request request = new Request.Builder()
+                .url(getArticles_url)
+                .build();
+        client.newCall(request).enqueue(callback);
+
+    }
 }

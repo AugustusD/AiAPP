@@ -72,4 +72,3 @@ public class DataApplication extends Application {
         this.title = title;
     }
 }
-

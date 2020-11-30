@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.duanshl.aiapp.MainActivity;
 import com.duanshl.aiapp.R;
 import com.duanshl.aiapp.Utils.OkHttpUtil;
+import com.leo.copytoutiao.DataApplication;
 
 import org.json.JSONException;
 
@@ -141,7 +142,14 @@ public class RegisterFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (responseData.equals("true")){
+                        String ans = responseData.substring(0,4);
+                        String username = responseData.substring(5);
+
+                        DataApplication dataApplication = null;
+                        //把用户名放置在DataApplication中
+                        dataApplication.setAuthor(username);
+
+                        if (ans.equals("true")){
                             Toast.makeText(getActivity(),"注册成功",Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getActivity(), MainActivity.class);
                             startActivity(intent);
