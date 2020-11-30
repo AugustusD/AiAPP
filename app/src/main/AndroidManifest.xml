@@ -29,7 +29,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="Android:icon, android:theme">
+        tools:replace="Android:icon, android:theme, android:name">
 <!--        <activity android:name=".ui.article.ArticlePublishActivity"></activity>-->
         <activity android:name=".ui.article.ShowArticleContentActivity" />
 

@@ -17,6 +17,8 @@ public class PlantRecg {
             // 本地文件路径
             String filePath = imageUri;
 
+            System.out.println("图片文件路径filePath ============= " + filePath);
+
 //            Instant inst1 = Instant.now();
             byte[] imgData = FileUtil.readFileByBytes(filePath);
 //            Instant inst2 = Instant.now();

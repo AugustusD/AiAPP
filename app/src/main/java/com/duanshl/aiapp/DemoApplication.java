@@ -1,11 +1,10 @@
 package com.duanshl.aiapp;
 
-import android.app.Application;
-
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.leo.copytoutiao.DataApplication;
 
-public class DemoApplication extends Application {
+public class DemoApplication extends DataApplication {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -15,7 +14,4 @@ public class DemoApplication extends Application {
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
     }
-
-
-
 }

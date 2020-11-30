@@ -1,17 +1,24 @@
 package com.leo.copytoutiao.utils;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+
+import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class HttpUtil {
 
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+
+
 
     public static void getLocInfo(String location, okhttp3.Callback callback) throws JSONException {
 
@@ -28,6 +35,31 @@ public class HttpUtil {
                 .post(body)
                 .build();
         client.newCall(request).enqueue(callback);
+    }
+
+    public static String getImgNetUrl(String imgBase64) throws IOException, JSONException {
+        String token = "7333a25564d141999486f90123852bdb";
+        String category = "aiapp";
+        OkHttpClient client = new OkHttpClient();
+            RequestBody formBody = new FormBody.Builder()
+                    .add("token",token)
+                    .add("v","1")
+                    .add("categories",category)
+                    .add("b64_data",imgBase64)
+                    .build();
+            Request request = new Request.Builder()
+                    .url("https://api.superbed.cn/upload")
+                    .post(formBody)
+                    .build();
+        Call call = client.newCall(request);
+        Response response = call.execute();
+
+        System.out.println("response ====== " + response);
+
+        JSONObject jsonObject = new JSONObject(response.body().string());
+
+        String imgNetUrl = (String) jsonObject.get("url");
+        return imgNetUrl;
     }
 
 }

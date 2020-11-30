@@ -1,6 +1,9 @@
 package com.leo.copytoutiao.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +22,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.leo.copytoutiao.DataApplication;
 import com.leo.copytoutiao.R;
 import com.leo.copytoutiao.utils.HttpUtil;
 
@@ -39,7 +43,10 @@ public class SelectLocationActivity extends AppCompatActivity {
     private BitmapDescriptor bitmap;
     // 是否首次定位
     boolean isFirstLoc = true;
+    private static String location;
     private static String address;
+    Button btn_cancel;
+    Button btn_submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +68,32 @@ public class SelectLocationActivity extends AppCompatActivity {
         // 点击地图获取位置
         startMark();
 
+        btn_cancel = findViewById(R.id.btn_cancel);
+        btn_submit = findViewById(R.id.btn_submit);
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(), ShowArtActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击了确定，则在共享数据类中保存地理位置信息
+                DataApplication dataApplication = (DataApplication)getApplicationContext();
+                dataApplication.setLocation(location);
+                dataApplication.setAddress(address);
+
+                Intent intent = new Intent(getApplication(), ShowArtActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
+
 
     /**
      * 定位初始化
@@ -115,7 +147,7 @@ public class SelectLocationActivity extends AppCompatActivity {
                 // 在地图上添加Marker，并显示
                 mBaiduMap.addOverlay(options);
 
-                String location = latitude + "," + longitude;
+                location = latitude + "," + longitude;
 
                 try {
                     getLocationInfo(location);

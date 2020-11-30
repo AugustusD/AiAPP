@@ -14,18 +14,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/selectLocationMap"
-        android:text="TextView" />
+        android:text="请选择故事发生的地点" />
 
     <com.baidu.mapapi.map.MapView
         android:id="@+id/selectLocationMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView" >
-
 
     </com.baidu.mapapi.map.MapView>
 
