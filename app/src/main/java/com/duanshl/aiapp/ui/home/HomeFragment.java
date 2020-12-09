@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,12 +28,6 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.geocode.GeoCodeResult;
-import com.baidu.mapapi.search.geocode.GeoCoder;
-import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.duanshl.aiapp.R;
 
 
@@ -46,11 +41,6 @@ public class HomeFragment extends Fragment {
     private String address= "";
     // 是否首次定位
     boolean isFirstLoc = true;
-
-//    static MapFragment newInstance() {
-//        MapFragment f = new MapFragment();
-//        return f;
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,15 +68,19 @@ public class HomeFragment extends Fragment {
         mMapView.removeViewAt(1);
         mBaiduMap = mMapView.getMap();
 //        final MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
+//        init();
         // 定位初始化
         initLocation();
+
+        //地图上标点
+        init();
+
         // 点击地图获取位置
         startMark();
         return root;
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
         if (SDK_INT > 8)
         {
@@ -106,7 +100,6 @@ public class HomeFragment extends Fragment {
         mLocClient = new LocationClient(getActivity());
         HomeFragment.MyLocationListenner myListener = new HomeFragment.MyLocationListenner();
         mLocClient.registerLocationListener(myListener);
-
         LocationClientOption option = new LocationClientOption();
         // 打开gps
         option.setOpenGps(true);
@@ -115,6 +108,63 @@ public class HomeFragment extends Fragment {
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
+    }
+
+    public void init(){
+        bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_redmarker);
+        Double[][] points;
+        points=new Double[][]
+                {
+                        {112.437064,34.622428},
+                        {112.445975,34.642388},
+                        {112.423266,34.608881},
+                        {112.430021,34.60389},
+                        {112.429734,34.612209},
+                        {112.43807,34.604484},
+                        {112.42844,34.619339},
+                        {112.367499,34.5945},
+                        {112.367499,34.5945},
+                        {112.367499,34.5945},
+                        {112.442616,34.631369},
+                        {112.44474,34.629795},
+                        {112.629926,35.076784},
+                        {112.140098,35.233551},
+                        {111.613475,35.339149},
+                        {122.097635,37.491359},
+                        {121.527319,31.210668},
+                        {126.678562,34.912135},
+                        {139.648656,35.846328},
+                        {126.954521,37.593907},
+                        {116.468062,40.659726},
+                        {68.119966,48.283905},
+                        {-1.642584,54.358888},
+                        {-7.676897,70.524815},
+                        {76.656312,19.278115},
+                        {42.952464,58.241791},
+                        {32.797156,49.304902},
+                        {25.511826,45.406785},
+                        {31.104605,11.284669},
+                        {120.920208,24.32734},
+                        {120.625851,22.971496},
+                        {112.435061,34.609981},
+                        {112.434315,34.60825},
+                        {112.437262,34.609},
+                        {112.429986,34.610367},
+                        {112.430345,34.607812},
+                        {112.432627,34.613442}
+                };
+
+        for (int i = 0; i < points.length; i ++){
+            LatLng p = new LatLng(points[i][1],points[i][0]);
+//            System.out.println("我是init里面的我是init里面的我是init里面的");
+//            System.out.println("latitude=" + points[0][i] + ",longitude=" + points[1][i]);
+            // 构建MarkerOption，用于在地图上添加Marker
+            MarkerOptions options = new MarkerOptions().position(p)
+                    .icon(bitmap);
+            // 在地图上添加Marker，并显示
+            mBaiduMap.addOverlay(options);
+        }
+
     }
 
     /**
@@ -137,51 +187,17 @@ public class HomeFragment extends Fragment {
                 double latitude = latLng.latitude;
                 double longitude = latLng.longitude;
                 System.out.println("latitude=" + latitude + ",longitude=" + longitude);
+                Toast.makeText(getContext(),"latitude=" + latitude + ",longitude=" + longitude,Toast.LENGTH_SHORT);
                 //先清除图层
-                mBaiduMap.clear();
+//                mBaiduMap.clear();
                 // 定义Maker坐标点
                 LatLng point = new LatLng(latitude, longitude);
+
                 // 构建MarkerOption，用于在地图上添加Marker
                 MarkerOptions options = new MarkerOptions().position(point)
                         .icon(bitmap);
                 // 在地图上添加Marker，并显示
                 mBaiduMap.addOverlay(options);
-                //实例化一个地理编码查询对象
-                GeoCoder geoCoder = GeoCoder.newInstance();
-//                //设置反地理编码位置坐标
-//                ReverseGeoCodeOption op = new ReverseGeoCodeOption()
-//                        .location(latLng);
-//                op.location(latLng);
-                //发起反地理编码请求(经纬度->地址信息)
-//                geoCoder.reverseGeoCode(op);
-                geoCoder.reverseGeoCode(new ReverseGeoCodeOption()
-                        .location(latLng)
-                        // 设置是否返回新数据 默认值0不返回，1返回
-                        .newVersion(1)
-                        // POI召回半径，允许设置区间为0-1000米，超过1000米按1000米召回。默认值为1000
-                        .radius(500));
-
-                geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
-                    @Override
-                    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-                        if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                            //没有找到检索结果
-                            System.out.println("没有找到检索结果");
-                            return;
-                        } else {
-                            //详细地址
-                            String address = reverseGeoCodeResult.getAddress();
-                            //行政区号
-                            int adCode = reverseGeoCodeResult. getCityCode();
-                        }
-                        System.out.println("详细地址==========="+address);
-                    }
-                    @Override
-                    public void onGetGeoCodeResult(GeoCodeResult arg0) {
-                    }
-                });
-
-                geoCoder.destroy();
             }
         });
     }

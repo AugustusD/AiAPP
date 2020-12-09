@@ -1,6 +1,8 @@
 package com.duanshl.aiapp.ui.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,31 +17,34 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.duanshl.aiapp.R;
-import com.duanshl.aiapp.Utils.OkHttpUtil;
 import com.duanshl.aiapp.data.model.ArticleBean;
-
-import org.jetbrains.annotations.NotNull;
+import com.duanshl.aiapp.ui.article.ArticlePreciseActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
-import okhttp3.Call;
-import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 
 public class DashboardFragment extends Fragment {
+
 
     private View view;
     public RecyclerView recyclerView;
     private ArticleRecycleAdapter articleRecycleAdapter;
     private ArrayList<ArticleBean> articleBeanArrayList = new ArrayList<ArticleBean>();
     private DashboardViewModel dashboardViewModel;
+//    private static String responseData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     public View onCreateView(@NonNull final LayoutInflater inflater,
@@ -55,52 +60,52 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-
-        initRecyclerView();
-        initData();
-
-
+        try {
+            download();
+            initRecyclerView();
+            initData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
     /**
      * TODO 模拟数据
      */
-    private void initData() {
-        for (int i=0;i<10;i++){
-            ArticleBean articleBean=new ArticleBean();
-            articleBean.setTitle("setTitle"+i);
-            articleBean.setAuthor("setAuthor"+i);
-            articleBean.setAddress("setAddress"+i);
-            articleBean.setDate(new Date());
+    private void initData() throws IOException{
+        String responseData = download();
+//        System.out.println("data ================ " + responseData);
+        JSONObject jsonObject = JSONObject.parseObject(responseData);
+        System.out.println("count =========== "+jsonObject.getString("count"));
+        JSONArray jsonArray = jsonObject.getJSONArray("data");
+        for (int i = 0; i < jsonArray.size(); i++) {
+            ArticleBean articleBean = new ArticleBean();
+            JSONObject object = new JSONObject(jsonArray.getJSONObject(i));
+            articleBean.setUuid(object.getString("artiUuid"));
+            articleBean.setTitle(object.getString("artiTitle"));
+            articleBean.setAuthor("作者: " + object.getString("artiAuthor"));
+            articleBean.setDate("日期: " + object.getString("artiDate"));
+            articleBean.setContent(object.getString("artiContent"));
+            articleBean.setLocation(object.getString("artiLocation"));
+            articleBean.setAddress("故事地点: " + object.getString("artiAddress"));
+            articleBean.setImgUrl(object.getString("artiImg"));
             articleBeanArrayList.add(articleBean);
         }
 
-
-
-
     }
 
-    public void download(){
-        OkHttpUtil.downloadArticles(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String responseData = response.body().toString();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                });
-
-
-            }
-        });
+    public String download() throws IOException {
+//        final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String getArticles_url = "http://47.101.135.103:8080/article/articles";
+        Request request = new Request.Builder()
+                .url(getArticles_url)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        String res = response.body().string();
+        System.out.println("response body ============= " + res);
+        return res;
     }
 
 
@@ -126,11 +131,15 @@ public class DashboardFragment extends Fragment {
             public void OnItemClick(View view, ArticleBean data) {
                 //进入article之中
                 //此处进行监听事件的业务处理
-                Toast.makeText(getActivity(),"我是item:"+data.getTitle(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(),"我是item:"+data.getTitle(),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), ArticlePreciseActivity.class);
+                intent.putExtra("content", data.getContent());
+                startActivity(intent);
+
             }
             @Override
             public  void OnItemLongClick(View view, ArticleBean data) {
-                Toast.makeText(getActivity(), "long click:"+data.getAuthor(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "长按的功能还没有开发出来~", Toast.LENGTH_SHORT).show();
             }
         });
     }

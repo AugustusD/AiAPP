@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import com.duanshl.aiapp.MainActivity;
 import com.duanshl.aiapp.R;
 import com.duanshl.aiapp.Utils.OkHttpUtil;
-import com.leo.copytoutiao.DataApplication;
 
 import org.json.JSONException;
 
@@ -143,25 +142,23 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void run() {
                         System.out.println("登录马上成功！");
-                        //根据返回的数据组成,截取进行判断
+
                         String ans = responseData.substring(0,4);
+
                         String username = responseData.substring(5);
-
-                        DataApplication dataApplication = null;
-                        //把用户名放置在DataApplication中
-//                        dataApplication.setAuthor(username);
-
                         if (ans.equals("true")){
                             Toast.makeText(getActivity(),"登录成功",Toast.LENGTH_SHORT).show();
 
                             Intent intent = new Intent(getActivity(), MainActivity.class);
                             startActivity(intent);
                             getActivity().finish();
-                        }else{
+                        }else {
+                            //根据返回的数据组成,截取进行判断
                             Toast.makeText(getActivity(),"登录失败,请检查账号密码是否正确",Toast.LENGTH_SHORT).show();
                             //密码栏清空，重新输入
                             et_password.setText("");
                         }
+
                     }
                 });
             }

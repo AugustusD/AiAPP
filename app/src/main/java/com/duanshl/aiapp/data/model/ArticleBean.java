@@ -1,16 +1,17 @@
 package com.duanshl.aiapp.data.model;
 
-import java.util.Date;
 
 public class ArticleBean {
 
     public String uuid;
     public String title;
     public String author;
-    public Date date;
+    public String date;
     public String content;
     public String location;
     public String address;
+
+    public String imgUrl;
 
     public ArticleBean() {
 
@@ -40,11 +41,11 @@ public class ArticleBean {
         this.author = author;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -72,7 +73,15 @@ public class ArticleBean {
         this.address = address;
     }
 
-    public ArticleBean(String uuid, String title, String author, Date date, String content, String location, String address) {
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public ArticleBean(String uuid, String title, String author, String date, String content, String location, String address) {
         this.uuid = uuid;
         this.author = author;
         this.title = title;

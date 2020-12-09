@@ -24,6 +24,16 @@ public class DataApplication extends Application {
     //RichEditText information
     String data = "";
 
+    String imgUrl = "";
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
     public String getData(){
         return data;
     }

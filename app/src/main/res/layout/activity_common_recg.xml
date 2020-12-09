@@ -6,55 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
+    <ImageView
+        android:id="@+id/ivPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:layout_constraintBottom_toTopOf="@+id/ivCamera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
-        android:id="@+id/plant_bar"
+        android:id="@+id/tttttt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="植物识别"
-        app:layout_constraintBottom_toTopOf="@+id/Toweb"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivPhoto"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <WebView
-        android:id="@+id/Toweb"
-        android:layout_width="match_parent"
-        android:layout_height="200pt"
-        android:layout_marginTop="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="点击按钮进行拍照识别"/>
 
     <ImageView
         android:id="@+id/ivCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:background="@android:color/black"
-        android:src="@drawable/ic_photo_camera"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Toweb"
-        app:layout_constraintVertical_bias="0.511" />
-
-    <ImageView
-        android:id="@+id/ivPhoto"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:src="@drawable/ic_cap"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.753"
-        app:layout_constraintStart_toEndOf="@+id/ivCamera"
-        app:layout_constraintTop_toBottomOf="@+id/Toweb"
-        app:layout_constraintVertical_bias="0.506" />
-
-
-    <TextView
-        android:id="@+id/text_dashboard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/tttttt" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

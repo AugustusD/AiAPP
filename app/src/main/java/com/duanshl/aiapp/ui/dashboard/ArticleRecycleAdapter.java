@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.duanshl.aiapp.R;
 import com.duanshl.aiapp.data.model.ArticleBean;
 
@@ -35,7 +36,6 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
     }
 
     //绑定数据，数据与view绑定
-
     @Override
     public void onBindViewHolder(myViewHodler holder, int position) {
         //根据点击位置绑定数据
@@ -45,7 +45,8 @@ public class ArticleRecycleAdapter extends RecyclerView.Adapter<ArticleRecycleAd
         holder.articleAuthor.setText(data.author);//获取实体类中的price字段并设置
         holder.articleDate.setText(data.date.toString());//获取实体类中的price字段并设置
         holder.articleAddress.setText(data.address);//获取实体类中的price字段并设置
-
+//        holder.articleImage.setImageURI(Uri.parse(data.imgUrl));
+        Glide.with(context).load(data.imgUrl).into(holder.articleImage);
     }
 
     //得到总条数

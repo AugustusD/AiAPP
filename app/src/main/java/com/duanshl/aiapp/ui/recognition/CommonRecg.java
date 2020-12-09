@@ -3,6 +3,7 @@ package com.duanshl.aiapp.ui.recognition;
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -155,19 +157,51 @@ public class CommonRecg extends AppCompatActivity {
                         String res_name = recgRes.getResult().get(0).name;
                         //组成URL,以百度百科形式展示到WebView里面
                         String showUrl = "https://baike.baidu.com/item/" + res_name;
-                        //获取控件
-                        Toweb = (WebView) findViewById(R.id.Toweb);
-                        //装载URL
-                        Toweb.loadUrl(showUrl);
-                        //获取焦点
-                        Toweb.requestFocus();
-                        Toweb.setWebViewClient(new WebViewClient(){
+
+
+
+                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                        alert.setTitle("我是" + res_name);
+                        WebView wv = new WebView(this);
+                        wv.loadUrl(showUrl);
+                        wv.setWebViewClient(new WebViewClient() {
                             @Override
                             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                                 view.loadUrl(url);
-                                return super.shouldOverrideUrlLoading(view, url);
+
+                                return true;
                             }
                         });
+                        alert.setView(wv);
+                        alert.setNegativeButton("关闭", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                        alert.show();
+
+
+
+
+//                        //获取控件
+//                        Toweb = (WebView) findViewById(R.id.Toweb);
+//                        //装载URL
+//                        Toweb.loadUrl(showUrl);
+//                        //获取焦点
+//                        Toweb.requestFocus();
+//                        Toweb.setWebViewClient(new WebViewClient(){
+//                            @Override
+//                            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                                view.loadUrl(url);
+//                                return super.shouldOverrideUrlLoading(view, url);
+//                            }
+//                        });
+
+
+
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

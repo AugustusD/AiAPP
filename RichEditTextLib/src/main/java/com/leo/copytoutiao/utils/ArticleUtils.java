@@ -23,7 +23,7 @@ public class ArticleUtils {
      * @param callback
      * @throws JSONException
      */
-    public static void publish(String title, String author, String date, String content, String location, String address, okhttp3.Callback callback) throws JSONException{
+    public static void publish(String title, String author, String date, String content, String location, String address, String imgUrl, okhttp3.Callback callback) throws JSONException{
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("arti_title",title);
         jsonObject.put("arti_author",author);
@@ -31,6 +31,7 @@ public class ArticleUtils {
         jsonObject.put("arti_content",content);
         jsonObject.put("arti_location",location);
         jsonObject.put("arti_address",address);
+        jsonObject.put("arti_img",imgUrl);
         String jj = jsonObject.toString();
         System.out.println(jj);
 

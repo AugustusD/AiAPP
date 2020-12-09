@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical"
+    tools:context=".ui.me.ProfileActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/h_back"
+            android:layout_width="match_parent"
+            android:layout_height="221dp" />
+
+        <ImageView
+            android:id="@+id/h_head"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/h_back"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/user_line"
+                android:layout_width="1dp"
+                android:layout_height="25dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="15dp"
+                android:background="@android:color/white" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/user_line"
+                android:gravity="center"
+                android:text="DuanShL"
+                android:textColor="@android:color/white"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/user_val"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:layout_toRightOf="@id/user_line"
+                android:text="my_sky@outlook.com"
+                android:textColor="@android:color/white"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/user_motto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/user_line"
+                android:gravity="center"
+                android:text="Think about everything."
+                android:textColor="@android:color/white"
+                android:textSize="17sp" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.duanshl.aiapp.ui.item.ItemView
+        android:id="@+id/write"
+        android:layout_marginTop="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:left_icon="@drawable/ic_write"
+        app:left_text="写下你的故事"
+        app:right_text="" />
+
+    <com.duanshl.aiapp.ui.item.ItemView
+        android:id="@+id/photo"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:left_icon="@drawable/ic_photo"
+        app:left_text="拍照识图"
+        app:right_text="" />
+
+    <com.duanshl.aiapp.ui.item.ItemView
+        android:id="@+id/improve"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:left_icon="@drawable/ic_improve_profile"
+        app:left_text="更改基本信息"
+        app:right_text="" />
+
+    <com.duanshl.aiapp.ui.item.ItemView
+        android:id="@+id/pass"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:left_icon="@drawable/ic_pass"
+        app:left_text="修改密码"
+        app:right_text="" />
+    <com.duanshl.aiapp.ui.item.ItemView
+        android:id="@+id/phone"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:left_icon="@drawable/ic_phone"
+        app:left_text="绑定手机"
+        app:right_text="" />
+    <com.duanshl.aiapp.ui.item.ItemView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:left_icon="@drawable/ic_version"
+        app:left_text="版本信息"
+        app:right_text="" />
+    <com.duanshl.aiapp.ui.item.ItemView
+        android:id="@+id/feed"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:left_icon="@drawable/ic_feedback"
+        app:left_text="帮助与反馈"
+        app:right_text="" />
+    <com.duanshl.aiapp.ui.item.ItemView
+        android:id="@+id/setting"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:left_icon="@drawable/ic_setting"
+        app:left_text="设置"
+        app:right_text="" />
+
+</LinearLayout>

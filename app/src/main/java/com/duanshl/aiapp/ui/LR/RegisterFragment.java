@@ -15,7 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.duanshl.aiapp.MainActivity;
 import com.duanshl.aiapp.R;
 import com.duanshl.aiapp.Utils.OkHttpUtil;
-import com.leo.copytoutiao.DataApplication;
+import com.duanshl.aiapp.db.SqliteDB;
+import com.duanshl.aiapp.db.User;
 
 import org.json.JSONException;
 
@@ -107,11 +108,16 @@ public class RegisterFragment extends Fragment {
                 }else {
                     try {
                         registerWithOkHttp(registerUrl, registerEmail, registerPassword, registerUserName);
+
+                        User user = new User();
+                        user.setUsername(registerEmail);
+                        user.setUserpwd(registerPassword);
+                        int result= SqliteDB.getInstance(getContext()).saveUser(user);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
             }
         });
     }
@@ -145,9 +151,9 @@ public class RegisterFragment extends Fragment {
                         String ans = responseData.substring(0,4);
                         String username = responseData.substring(5);
 
-                        DataApplication dataApplication = null;
-                        //把用户名放置在DataApplication中
-                        dataApplication.setAuthor(username);
+//                        DataApplication dataApplication = null;
+//                        //把用户名放置在DataApplication中
+//                        dataApplication.setAuthor(username);
 
                         if (ans.equals("true")){
                             Toast.makeText(getActivity(),"注册成功",Toast.LENGTH_SHORT).show();
